@@ -40,14 +40,14 @@ public class ItemDAOImpl {
         }
 
 
-        public void updateItem( String description,BigDecimal unitPrice , int qtyOnHand ,String code) throws SQLException, ClassNotFoundException {
+        public boolean updateItem( String description,BigDecimal unitPrice , int qtyOnHand ,String code) throws SQLException, ClassNotFoundException {
             Connection connection = DBConnection.getDbConnection().getConnection();
             PreparedStatement pstm = connection.prepareStatement("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?");
             pstm.setString(1, description);
             pstm.setBigDecimal(2, unitPrice);
             pstm.setInt(3, qtyOnHand);
             pstm.setString(4, code);
-            pstm.executeUpdate();
+            return pstm.executeUpdate()>0;
 
         }
 
@@ -63,6 +63,15 @@ public class ItemDAOImpl {
             PreparedStatement pstm = connection.prepareStatement("DELETE FROM Item WHERE code=?");
             pstm.setString(1, code);
             pstm.executeUpdate();
+        }
+        public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
+            Connection connection = DBConnection.getDbConnection().getConnection();
+            PreparedStatement pstm = connection.prepareStatement("SELECT * FROM Item WHERE code=?");
+            pstm.setString(1, code);
+            ResultSet rst = pstm.executeQuery();
+            rst.next();
+            return new ItemDTO(code, rst.getString("description"), rst.getBigDecimal("unitPrice"), rst.getInt("qtyOnHand"));
+
         }
 
     }

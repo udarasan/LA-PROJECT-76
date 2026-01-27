@@ -3,6 +3,7 @@ package com.example.layeredarchitecture.dao;
 import com.example.layeredarchitecture.db.DBConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
 
 public class OrderDAOImpl {
 
@@ -18,5 +19,14 @@ public class OrderDAOImpl {
         stm.setString(1, orderId);
         return stm.executeQuery().next();
     }
+    public boolean saveOrder(String orderId, LocalDate orderDate, String customerId) throws SQLException, ClassNotFoundException {
+        Connection connection = DBConnection.getDbConnection().getConnection();
+        PreparedStatement stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
+        stm.setString(1, orderId);
+        stm.setDate(2, Date.valueOf(orderDate));
+        stm.setString(3, customerId);
+        return stm.executeUpdate()>0;
+    }
+
 
 }

@@ -342,14 +342,9 @@ public class PlaceOrderFormController {
             if (b1) {
                 return false;
             }
-
             connection.setAutoCommit(false);
-            stm = connection.prepareStatement("INSERT INTO `Orders` (oid, date, customerID) VALUES (?,?,?)");
-            stm.setString(1, orderId);
-            stm.setDate(2, Date.valueOf(orderDate));
-            stm.setString(3, customerId);
-
-            if (stm.executeUpdate() != 1) {
+            boolean b2=orderDAO.saveOrder(orderId,orderDate,customerId);
+            if (!b2) {
                 connection.rollback();
                 connection.setAutoCommit(true);
                 return false;

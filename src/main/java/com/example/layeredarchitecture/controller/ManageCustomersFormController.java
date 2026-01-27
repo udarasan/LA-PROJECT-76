@@ -150,7 +150,7 @@ public class ManageCustomersFormController {
                 if (existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, id + " already exists").show();
                 }
-                CustomerDAOImpl  customerDAO = new CustomerDAOImpl();
+                CustomerDAO  customerDAO = new CustomerDAOImpl();
                 customerDAO.saveCustomers(id,name,address);
 
                 tblCustomers.getItems().add(new CustomerTM(id, name, address));
@@ -167,7 +167,7 @@ public class ManageCustomersFormController {
                 if (!existCustomer(id)) {
                     new Alert(Alert.AlertType.ERROR, "There is no such customer associated with the id " + id).show();
                 }
-                CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+                CustomerDAO customerDAO = new CustomerDAOImpl();
                 customerDAO.updateCustomers(id,name,address);
             } catch (SQLException e) {
                 new Alert(Alert.AlertType.ERROR, "Failed to update the customer " + id + e.getMessage()).show();
@@ -187,7 +187,7 @@ public class ManageCustomersFormController {
 
     boolean existCustomer(String id) throws SQLException, ClassNotFoundException {
 
-        CustomerDAOImpl  customerDAO = new CustomerDAOImpl();
+        CustomerDAO  customerDAO = new CustomerDAOImpl();
         return customerDAO.exitCustomers(id);
         //return pstm.executeQuery().next();
 
@@ -207,7 +207,7 @@ public class ManageCustomersFormController {
 //            pstm.setString(1, id);
 //            pstm.executeUpdate();
 
-            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+            CustomerDAO customerDAO = new CustomerDAOImpl();
             customerDAO.deleteCustomers(id);
 
             tblCustomers.getItems().remove(tblCustomers.getSelectionModel().getSelectedItem());
@@ -223,7 +223,7 @@ public class ManageCustomersFormController {
 
     private String generateNewId() {
         try {
-            CustomerDAOImpl customerDAO = new CustomerDAOImpl();
+            CustomerDAO customerDAO = new CustomerDAOImpl();
             String rst = customerDAO.generateNewID();
 
             return rst;

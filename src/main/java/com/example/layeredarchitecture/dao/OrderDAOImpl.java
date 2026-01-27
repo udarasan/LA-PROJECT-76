@@ -5,7 +5,7 @@ import com.example.layeredarchitecture.db.DBConnection;
 import java.sql.*;
 import java.time.LocalDate;
 
-public class OrderDAOImpl {
+public class OrderDAOImpl implements OrderDAO {
 
     public String generateNewOrderID() throws SQLException, ClassNotFoundException {
         Connection connection = DBConnection.getDbConnection().getConnection();

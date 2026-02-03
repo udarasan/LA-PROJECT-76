@@ -26,8 +26,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         return CRUDUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress());
     }
     @Override
-    public boolean updateCustomers(String id, String name, String address) throws SQLException, ClassNotFoundException {
-        return CRUDUtil.execute("UPDATE Customer SET name=?,address=? WHERE id=?", name, address, id);
+    public boolean updateCustomers(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+        return CRUDUtil.execute("UPDATE Customer SET name=?,address=? WHERE id=?", customerDTO.getName(), customerDTO.getAddress(), customerDTO.getId());
     }
     @Override
     public boolean exitCustomers(String id) throws SQLException, ClassNotFoundException {
@@ -52,8 +52,10 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public CustomerDTO searchCustomer(String id) throws SQLException, ClassNotFoundException {
         ResultSet rst = CRUDUtil.execute("SELECT * FROM Customer WHERE id=?", id);
-        rst.next();
-        return new CustomerDTO(rst.getString("id"), rst.getString("name"), rst.getString("address"));
+        if (rst.next()) {
+            return new CustomerDTO(rst.getString("id"), rst.getString("name"), rst.getString("address"));
+        }
+        return null;
     }
 
 

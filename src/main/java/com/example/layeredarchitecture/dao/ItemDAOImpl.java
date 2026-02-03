@@ -26,26 +26,30 @@ public class ItemDAOImpl implements ItemDAO {
         return items;
     }
     @Override
-    public boolean saveItem(String code, String description, BigDecimal unitPrice, int qtyOnHand) throws SQLException, ClassNotFoundException {
-        return CRUDUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",code,description,unitPrice,qtyOnHand);
+    public boolean saveItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
+        return CRUDUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",itemDTO.getCode(), itemDTO.getDescription(), itemDTO.getUnitPrice(), itemDTO.getQtyOnHand());
         }
 
         @Override
-        public boolean updateItem( String description,BigDecimal unitPrice , int qtyOnHand ,String code) throws SQLException, ClassNotFoundException {
-            return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",description,unitPrice,qtyOnHand,code);
+        public boolean updateItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
+            return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",itemDTO.getDescription(), itemDTO.getUnitPrice(), itemDTO.getQtyOnHand(), itemDTO.getCode());
 
         }
         @Override
         public boolean existItem(String code) throws SQLException, ClassNotFoundException {
-            return CRUDUtil.execute("SELECT * FROM Item WHERE code=?",code);
-
+            ResultSet rst= CRUDUtil.execute("SELECT * FROM Item WHERE code=?",code);
+            return rst.next();
         }
         @Override
         public boolean deleteItem(String code) throws SQLException, ClassNotFoundException {
             return CRUDUtil.execute("DELETE FROM Item WHERE code=?",code);
         }
         public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
-            return  CRUDUtil.execute("SELECT * FROM Item WHERE code=?",code);
+            ResultSet rst= CRUDUtil.execute("SELECT * FROM Item WHERE code=?",code);
+            if (rst.next()) {
+                return new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unitPrice"),rst.getInt("qtyOnHand"));
+            }
+            return null;
         }
 
     public String generateNewID() throws SQLException, ClassNotFoundException {

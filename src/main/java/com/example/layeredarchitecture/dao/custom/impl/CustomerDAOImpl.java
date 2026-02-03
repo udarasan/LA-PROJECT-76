@@ -58,6 +58,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         }
         return null;
     }
+    @Override
+    public void filterCustomerByName(String name) throws SQLException, ClassNotFoundException {
 
-
+    }
 }

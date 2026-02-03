@@ -22,12 +22,12 @@ public class CustomerDAOImpl implements CustomerDAO {
         return customers;
     }
     @Override
-    public void saveCustomers(String id, String name, String address) throws SQLException, ClassNotFoundException {
-        CRUDUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", id, name, address);
+    public boolean saveCustomers(CustomerDTO customerDTO) throws SQLException, ClassNotFoundException {
+        return CRUDUtil.execute("INSERT INTO Customer (id,name, address) VALUES (?,?,?)", customerDTO.getId(), customerDTO.getName(), customerDTO.getAddress());
     }
     @Override
-    public void updateCustomers(String id, String name, String address) throws SQLException, ClassNotFoundException {
-        CRUDUtil.execute("UPDATE Customer SET name=?,address=? WHERE id=?", name, address, id);
+    public boolean updateCustomers(String id, String name, String address) throws SQLException, ClassNotFoundException {
+        return CRUDUtil.execute("UPDATE Customer SET name=?,address=? WHERE id=?", name, address, id);
     }
     @Override
     public boolean exitCustomers(String id) throws SQLException, ClassNotFoundException {
@@ -35,8 +35,8 @@ public class CustomerDAOImpl implements CustomerDAO {
         return  rst.next();
     }
     @Override
-    public void deleteCustomers(String id) throws SQLException, ClassNotFoundException {
-        CRUDUtil.execute("DELETE FROM Customer WHERE id=?", id);
+    public boolean deleteCustomers(String id) throws SQLException, ClassNotFoundException {
+        return CRUDUtil.execute("DELETE FROM Customer WHERE id=?", id);
     }
     @Override
     public String generateNewID() throws SQLException, ClassNotFoundException {

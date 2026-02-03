@@ -1,7 +1,7 @@
-package com.example.layeredarchitecture.dao;
+package com.example.layeredarchitecture.dao.custom.impl;
 
+import com.example.layeredarchitecture.dao.CRUDUtil;
 import com.example.layeredarchitecture.dao.custom.ItemDAO;
-import com.example.layeredarchitecture.db.DBConnection;
 import com.example.layeredarchitecture.model.ItemDTO;
 
 import java.math.BigDecimal;
@@ -9,50 +9,50 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class ItemDAOImpl implements ItemDAO {
-    @Override
-    public ArrayList<ItemDTO> getAllItems() throws SQLException , ClassNotFoundException {
-        ResultSet rst = CRUDUtil.execute("SELECT * FROM Item");
-        ArrayList<ItemDTO> items = new ArrayList<>();
-        while (rst.next()) {
-            String code = rst.getString("code");
-            String description = rst.getString("description");
-            int quantity = rst.getInt("qtyOnHand");
-            BigDecimal qtyOnHand = rst.getBigDecimal("unitPrice");
+        @Override
+        public ArrayList<ItemDTO> getAll() throws SQLException , ClassNotFoundException {
+            ResultSet rst = CRUDUtil.execute("SELECT * FROM Item");
+            ArrayList<ItemDTO> items = new ArrayList<>();
+            while (rst.next()) {
+                String code = rst.getString("code");
+                String description = rst.getString("description");
+                int quantity = rst.getInt("qtyOnHand");
+                BigDecimal qtyOnHand = rst.getBigDecimal("unitPrice");
 
-            ItemDTO itemDTO = new ItemDTO(code, description,qtyOnHand,quantity);
-            items.add(itemDTO);
+                ItemDTO itemDTO = new ItemDTO(code, description, qtyOnHand, quantity);
+                items.add(itemDTO);
 
+            }
+            return items;
         }
-        return items;
-    }
-    @Override
-    public boolean saveItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
+        @Override
+        public boolean save(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
         return CRUDUtil.execute("INSERT INTO Item (code, description, unitPrice, qtyOnHand) VALUES (?,?,?,?)",itemDTO.getCode(), itemDTO.getDescription(), itemDTO.getUnitPrice(), itemDTO.getQtyOnHand());
         }
-
         @Override
-        public boolean updateItem(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
+        public boolean update(ItemDTO itemDTO) throws SQLException, ClassNotFoundException {
             return CRUDUtil.execute("UPDATE Item SET description=?, unitPrice=?, qtyOnHand=? WHERE code=?",itemDTO.getDescription(), itemDTO.getUnitPrice(), itemDTO.getQtyOnHand(), itemDTO.getCode());
 
         }
         @Override
-        public boolean existItem(String code) throws SQLException, ClassNotFoundException {
+        public boolean exits(String code) throws SQLException, ClassNotFoundException {
             ResultSet rst= CRUDUtil.execute("SELECT * FROM Item WHERE code=?",code);
             return rst.next();
         }
         @Override
-        public boolean deleteItem(String code) throws SQLException, ClassNotFoundException {
+        public boolean delete(String code) throws SQLException, ClassNotFoundException {
             return CRUDUtil.execute("DELETE FROM Item WHERE code=?",code);
         }
-        public ItemDTO searchItem(String code) throws SQLException, ClassNotFoundException {
+        @Override
+        public ItemDTO search(String code) throws SQLException, ClassNotFoundException {
             ResultSet rst= CRUDUtil.execute("SELECT * FROM Item WHERE code=?",code);
             if (rst.next()) {
                 return new ItemDTO(rst.getString("code"),rst.getString("description"),rst.getBigDecimal("unitPrice"),rst.getInt("qtyOnHand"));
             }
             return null;
         }
-
-    public String generateNewID() throws SQLException, ClassNotFoundException {
+        @Override
+        public String generateNewID() throws SQLException, ClassNotFoundException {
         ResultSet rst = CRUDUtil.execute("SELECT code FROM Item ORDER BY code DESC LIMIT 1;");
         if (rst.next()) {
             String id = rst.getString("code");

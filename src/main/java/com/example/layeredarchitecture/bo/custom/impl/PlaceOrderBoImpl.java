@@ -65,6 +65,7 @@ public class PlaceOrderBoImpl implements PlaceOrderBO {
     public boolean placeOrder(String orderId, LocalDate orderDate, String customerId, List<OrderDetailDTO> orderDetails) throws SQLException, ClassNotFoundException {
         /*Transaction*/
         Connection connection = null;
+
         connection = DBConnection.getDbConnection().getConnection();
         boolean b1 = orderDAO.exits(orderId);
             /*if order id already exist*/
